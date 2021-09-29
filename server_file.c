@@ -16,6 +16,8 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#include "compat.h"
+
 #include <sys/types.h>
 #include <sys/time.h>
 #include <sys/stat.h>
@@ -29,7 +31,6 @@
 #include <stdio.h>
 #include <dirent.h>
 #include <time.h>
-#include <event.h>
 
 #include "httpd.h"
 #include "http.h"

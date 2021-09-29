@@ -26,12 +26,12 @@
  */
 
 %{
+#include "compat.h"
+
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/un.h>
 #include <sys/stat.h>
-#include <sys/queue.h>
-#include <sys/tree.h>
 #include <sys/ioctl.h>
 #include <sys/sockio.h>
 #include <sys/time.h>
@@ -48,6 +48,7 @@
 #include <stdint.h>
 #include <stdarg.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <netdb.h>
 #include <string.h>
 #include <ifaddrs.h>

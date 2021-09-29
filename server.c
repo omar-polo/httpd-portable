@@ -16,13 +16,13 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#include "compat.h"
+
 #include <sys/types.h>
-#include <sys/queue.h>
 #include <sys/time.h>
 #include <sys/stat.h>
 #include <sys/socket.h>
 #include <sys/uio.h>
-#include <sys/tree.h>
 
 #include <netinet/in.h>
 #include <netinet/tcp.h>
@@ -37,8 +37,6 @@
 #include <string.h>
 #include <syslog.h>
 #include <unistd.h>
-#include <event.h>
-#include <imsg.h>
 #include <tls.h>
 #include <vis.h>
 
@@ -80,6 +78,53 @@ static struct privsep_proc procs[] = {
 	{ "parent",	PROC_PARENT,	server_dispatch_parent },
 	{ "logger",	PROC_LOGGER,	server_dispatch_logger }
 };
+
+#if HAVE_EVENT2
+/* from /usr/src/lib/libevent/evbuffer.c */
+
+void bufferevent_read_pressure_cb(struct evbuffer *, size_t, size_t, void *);
+
+static int
+bufferevent_add(struct event *ev, int timeout)
+{
+        struct timeval tv, *ptv = NULL;
+
+        if (timeout) {
+                timerclear(&tv);
+                tv.tv_sec = timeout;
+                ptv = &tv;
+        }
+
+        return (event_add(ev, ptv));
+}
+
+void
+bufferevent_read_pressure_cb(struct evbuffer *buf, size_t old, size_t now,
+    void *arg) {
+	struct bufferevent *bufev = arg;
+	/*
+	 * If we are below the watermark then reschedule reading if it's
+	 * still enabled.
+	 */
+	if (bufev->wm_read.high == 0 || now < bufev->wm_read.high) {
+		evbuffer_setcb(buf, NULL, NULL);
+
+		if (bufev->enabled & EV_READ)
+			bufferevent_add(&bufev->ev_read,
+			    bufev->timeout_read.tv_usec);
+	}
+}
+
+/*
+ * One of the changes from libevent to libevent2 is that the
+ * timeout_read field in the bufferevent is now a struct timeval.
+ * This is an ugly hack, but lessen the diffs I have to carry in this
+ * portable version.
+ */
+#define timeout_read	timeout_read.tv_usec
+#define timeout_write	timeout_write.tv_usec
+
+#endif
 
 void
 server(struct privsep *ps, struct privsep_proc *p)
@@ -697,11 +742,14 @@ server_socket(struct sockaddr_storage *ss, in_port_t port,
 			    &val, sizeof(val)) == -1)
 				goto bad;
 			break;
+#ifdef IPV6_MINHOPCOUNT
+		/* FreeBSD lacks this setsockopt option */
 		case AF_INET6:
 			if (setsockopt(s, IPPROTO_IPV6, IPV6_MINHOPCOUNT,
 			    &val, sizeof(val)) == -1)
 				goto bad;
 			break;
+#endif
 		}
 	}
 
@@ -717,6 +765,8 @@ server_socket(struct sockaddr_storage *ss, in_port_t port,
 		    &val, sizeof(val)) == -1)
 			goto bad;
 	}
+#ifdef TCP_SACK_ENABLE
+	/* FreeBSD doesn't have this sockopt */
 	if (srv_conf->tcpflags & (TCPFLAG_SACK|TCPFLAG_NSACK)) {
 		if (srv_conf->tcpflags & TCPFLAG_NSACK)
 			val = 0;
@@ -726,6 +776,7 @@ server_socket(struct sockaddr_storage *ss, in_port_t port,
 		    &val, sizeof(val)) == -1)
 			goto bad;
 	}
+#endif
 
 	return (s);
 
@@ -1456,7 +1507,7 @@ server_bufferevent_write_chunk(struct client *clt,
     struct evbuffer *buf, size_t size)
 {
 	int ret;
-	ret = server_bufferevent_write(clt, buf->buffer, size);
+	ret = server_bufferevent_write(clt, EVBUFFER_DATA(buf), size);
 	if (ret != -1)
 		evbuffer_drain(buf, size);
 	return (ret);

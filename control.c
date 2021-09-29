@@ -16,19 +16,18 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#include <sys/queue.h>
+#include "compat.h"
+
 #include <sys/stat.h>
 #include <sys/socket.h>
 #include <sys/time.h>
 #include <sys/un.h>
 
 #include <errno.h>
-#include <event.h>
 #include <fcntl.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <imsg.h>
 
 #include "httpd.h"
 

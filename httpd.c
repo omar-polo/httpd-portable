@@ -16,8 +16,9 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#include "compat.h"
+
 #include <sys/types.h>
-#include <sys/queue.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
 #include <sys/resource.h>
@@ -35,7 +36,6 @@
 #include <fnmatch.h>
 #include <err.h>
 #include <errno.h>
-#include <event.h>
 #include <syslog.h>
 #include <unistd.h>
 #include <ctype.h>

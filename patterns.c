@@ -30,6 +30,8 @@
  * Standard library for string operations and pattern-matching
  */
 
+#include "compat.h"
+
 #include <sys/types.h>
 #include <ctype.h>
 #include <errno.h>

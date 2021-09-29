@@ -16,8 +16,9 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#include "compat.h"
+
 #include <sys/types.h>
-#include <sys/queue.h>
 #include <sys/uio.h>
 
 #include <limits.h>
@@ -26,7 +27,6 @@
 #include <string.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include <imsg.h>
 
 #include "httpd.h"
 

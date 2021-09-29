@@ -17,6 +17,8 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#include "compat.h"
+
 #include <sys/types.h>
 #include <sys/queue.h>
 #include <sys/socket.h>
@@ -35,7 +37,6 @@
 #include <stdio.h>
 #include <time.h>
 #include <resolv.h>
-#include <event.h>
 #include <ctype.h>
 #include <vis.h>
 #include <fcntl.h>

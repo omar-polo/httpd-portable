@@ -2,23 +2,30 @@ AM_CFLAGS =		-Wall -I$(srcdir) \
 			-Wstrict-prototypes -Wmissing-prototypes \
 			-Wmissing-declarations \
 			-Wshadow -Wpointer-arith \
-			-Wsign-compare -Wcast-qual
+			-Wsign-compare -Wcast-qual \
+			-Wno-pointer-sign
 
 bin_PROGRAMS =		httpd
 
-EXTRA_httpd_SOURCES =	compat/queue.h compat/imsg.h
+EXTRA_httpd_SOURCES =	compat/imsg.h compat/queue.h compat/tree.h \
+			compat/blf.h
 
-httpd_SOURCES =		parse.y		\
+httpd_SOURCES =		compat.h	\
 			config.c	\
+			config.h	\
 			control.c	\
+			http.h		\
 			httpd.c		\
+			httpd.h		\
 			log.c		\
 			logger.c	\
+			parse.y		\
 			patterns.c	\
+			patterns.h	\
 			proc.c		\
 			server.c	\
-			server_http.c	\
 			server_file.c	\
+			server_http.c	\
 			server_fcgi.c
 
 LDADD =			$(LIBOBJS)

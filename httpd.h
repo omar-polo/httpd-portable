@@ -32,8 +32,6 @@
 
 #include <stdarg.h>
 #include <limits.h>
-#include <event.h>
-#include <imsg.h>
 #include <tls.h>
 #include <vis.h>
 

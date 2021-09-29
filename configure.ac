@@ -23,6 +23,26 @@ AS_IF([test "x$with_libbsd" = "xyes"], [
 	])
 ])
 
+AC_REPLACE_FUNCS([
+	asprintf		\
+	bcrypt_newhash		\
+	crypt_newhash		\
+	err			\
+	explicit_bzero		\
+	freezero		\
+	getdtablecount		\
+	getdtablesize		\
+	recallocarray		\
+	setproctitle		\
+	strlcat			\
+	strlcpy			\
+	strtonum		\
+])
+
+AS_IF([test "x$ac_cv_func_bcrypt_newhash" != "xyes"], [AC_LIBOBJ([blowfish])])
+
+AC_CHECK_HEADERS([sys/tree.h])
+
 AC_MSG_CHECKING([for sys/queue.h with TAILQ_FOREACH_SAFE])
 AC_COMPILE_IFELSE([AC_LANG_PROGRAM([
 #include <sys/queue.h>
