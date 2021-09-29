@@ -76,6 +76,12 @@
 # include "compat/imsg.h"
 #endif
 
+#ifdef HAVE_STRAVIS
+# include <vis.h>
+#else
+# include "compat/vis.h"
+#endif
+
 #ifndef HAVE_ASPRINTF
 int		 asprintf(char**, const char*, ...);
 int		 vasprintf(char**, const char*, va_list);

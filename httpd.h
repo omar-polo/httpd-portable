@@ -32,7 +32,6 @@
 #include <stdarg.h>
 #include <limits.h>
 #include <tls.h>
-#include <vis.h>
 
 #include "patterns.h"
 

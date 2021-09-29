@@ -34,6 +34,7 @@ AC_REPLACE_FUNCS([
 	getdtablesize		\
 	recallocarray		\
 	setproctitle		\
+	stravis			\
 	strlcat			\
 	strlcpy			\
 	strtonum		\

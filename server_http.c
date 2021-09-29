@@ -37,7 +37,6 @@
 #include <time.h>
 #include <resolv.h>
 #include <ctype.h>
-#include <vis.h>
 #include <fcntl.h>
 
 #include "httpd.h"

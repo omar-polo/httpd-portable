@@ -8,7 +8,7 @@ AM_CFLAGS =		-Wall -I$(srcdir) \
 bin_PROGRAMS =		httpd
 
 EXTRA_httpd_SOURCES =	compat/imsg.h compat/queue.h compat/tree.h \
-			compat/blf.h
+			compat/vis.h compat/blf.h
 
 httpd_SOURCES =		compat.h	\
 			config.c	\

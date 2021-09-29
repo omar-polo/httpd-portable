@@ -38,7 +38,6 @@
 #include <syslog.h>
 #include <unistd.h>
 #include <tls.h>
-#include <vis.h>
 
 #include "httpd.h"
 
